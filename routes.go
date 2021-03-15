@@ -13,13 +13,14 @@ func routes(app *config.AppConfig) http.Handler {
 	mux := chi.NewRouter()
 
 	//r.Use(WriteToConsole);
-	mux.Use(NoSurf)
+	//mux.Use(NoSurf) //CSRF validation do later
 	mux.Use(SessionLoadSave)
 
 	// Learn function routing
 	mux.Get("/hello", learnfunc.PrintHello)
 	mux.Get("/addition", learnfunc.Addition)
 	mux.Get("/division", learnfunc.Division)
+	mux.Get("/jsontest", learnfunc.JsonExample)
 
 	//Gorilla Mux
 	//r := mux.NewRouter()

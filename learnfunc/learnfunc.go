@@ -1,6 +1,7 @@
 package learnfunc
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -46,4 +47,25 @@ func dividing (x,y float32) (float32, error) {
 
 	result := x/y;
 	return result, nil;
+}
+
+type jsonResponse struct {
+	Ok			bool		`json:"ok"`
+	Message	string	`json:"message"`
+}
+
+func JsonExample (w http.ResponseWriter, r *http.Request) {
+	resp := jsonResponse {
+		Ok: true,
+		Message: "You have successfully written a json response!",
+	}
+
+	//res, err := json.Marshal(resp)
+	res,err := json.MarshalIndent(resp, "", "  ")
+	log.Println(res)
+
+	if err!=nil {log.Fatal(err)}
+
+	w.Header().Set("Content-Type", "application/json")
+	log.Fatal(w.Write(res))
 }
