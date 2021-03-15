@@ -1,22 +1,31 @@
 package main
 
 import (
-	"github.com/gorilla/mux"
+	"net/http"
+
+	"github.com/go-chi/chi/v5"
 	"github.com/johanesr/jo_todo/config"
 	"github.com/johanesr/jo_todo/learnfunc"
-	"net/http"
 )
 
 func routes(app *config.AppConfig) http.Handler {
 	// Router Handler
-	r := mux.NewRouter()
+	mux := chi.NewRouter()
 
-	r.Use(WriteToConsole);
+	//r.Use(WriteToConsole);
+	mux.Use(NoSurf)
+	mux.Use(SessionLoadSave)
 
 	// Learn function routing
-	r.HandleFunc("/hello", learnfunc.PrintHello).Methods("GET")
-	r.HandleFunc("/addition", learnfunc.Addition).Methods("GET")
-	r.HandleFunc("/division", learnfunc.Division).Methods("GET")
+	mux.Get("/hello", learnfunc.PrintHello)
+	mux.Get("/addition", learnfunc.Addition)
+	mux.Get("/division", learnfunc.Division)
 
-	return r
+	//Gorilla Mux
+	//r := mux.NewRouter()
+	//r.HandleFunc("/hello", learnfunc.PrintHello).Methods("GET")
+	//r.HandleFunc("/addition", learnfunc.Addition).Methods("GET")
+	//r.HandleFunc("/division", learnfunc.Division).Methods("GET")
+
+	return mux
 }
