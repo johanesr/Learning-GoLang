@@ -11,6 +11,8 @@ func routes(app *config.AppConfig) http.Handler {
 	// Router Handler
 	r := mux.NewRouter()
 
+	r.Use(WriteToConsole);
+
 	// Learn function routing
 	r.HandleFunc("/hello", learnfunc.PrintHello).Methods("GET")
 	r.HandleFunc("/addition", learnfunc.Addition).Methods("GET")
