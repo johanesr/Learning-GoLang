@@ -54,7 +54,30 @@ type jsonResponse struct {
 	Message	string	`json:"message"`
 }
 
+var res jsonResponse
+
 func JsonExample (w http.ResponseWriter, r *http.Request) {
+	//Unmarshal
+	myJson := `
+		[
+			{
+				"ok": true,
+				"message": "First Data"
+			},
+			{
+				"ok": false,
+				"message": "Second Data"
+			}
+		]`
+
+	var unmarshalled []jsonResponse
+
+	err := json.Unmarshal([]byte(myJson), &unmarshalled)
+	if err != nil {log.Println("Error unmarshalling json", err)}
+	log.Printf("unmarshalled: %v", unmarshalled)
+
+
+	//Marshall
 	resp := jsonResponse {
 		Ok: true,
 		Message: "You have successfully written a json response!",
@@ -62,10 +85,31 @@ func JsonExample (w http.ResponseWriter, r *http.Request) {
 
 	//res, err := json.Marshal(resp)
 	res,err := json.MarshalIndent(resp, "", "  ")
-	log.Println(res)
+	log.Println(string(res))
 
 	if err!=nil {log.Fatal(err)}
 
 	w.Header().Set("Content-Type", "application/json")
-	log.Fatal(w.Write(res))
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+	_,_ = w.Write(res)
+}
+
+func JsonGetExample(w http.ResponseWriter, r *http.Request) {
+	res.Ok = true
+	res.Message = "test"
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	json.NewEncoder(w).Encode(res)
+}
+
+func JsonPostExample(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var unmarshalled jsonResponse
+	err := json.NewDecoder(r.Body).Decode(&unmarshalled)
+	if err!=nil {log.Println(err)}
+	log.Println(unmarshalled)
+	json.NewEncoder(w).Encode(unmarshalled)
 }

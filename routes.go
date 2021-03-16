@@ -21,6 +21,8 @@ func routes(app *config.AppConfig) http.Handler {
 	mux.Get("/addition", learnfunc.Addition)
 	mux.Get("/division", learnfunc.Division)
 	mux.Get("/jsontest", learnfunc.JsonExample)
+	mux.Get("/jsongettest", learnfunc.JsonGetExample)
+	mux.Post("/jsonposttest", learnfunc.JsonPostExample)
 
 	//Gorilla Mux
 	//r := mux.NewRouter()
